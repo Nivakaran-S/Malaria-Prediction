@@ -1,1 +1,1 @@
-# Malaria Disease Prediction(In progress)
+# Malaria Disease Prediction

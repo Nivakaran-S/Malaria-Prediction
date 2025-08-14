@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malaria Prediction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #6b7280, #1f2937);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            max-width: 32rem;
+            width: 100%;
+        }
+        .title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .input-file {
+            border: 2px dashed #d1d5db;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        .input-file:hover {
+            border-color: #3b82f6;
+        }
+        .predict-btn {
+            background: #3b82f6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .predict-btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+        .result {
+            margin-top: 1.5rem;
+            font-size: 1.125rem;
+            color: #1f2937;
+            text-align: center;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Malaria Prediction</h1>
+        <form id="upload-form" enctype="multipart/form-data" class="flex flex-col items-center gap-4">
+            <label for="file-input" class="input-file">
+                <input type="file" id="file-input" name="file" accept="image/*" class="hidden">
+                <span>Drag & Drop or Click to Upload Image</span>
+            </label>
+            <button type="submit" class="predict-btn">Predict</button>
+        </form>
+        <p id="result" class="result"></p>
+    </div>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            const fileInput = document.getElementById('file-input');
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                document.getElementById('result').innerText = data.prediction || data.error;
+            } catch (error) {
+                document.getElementById('result').innerText = 'Error: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>
